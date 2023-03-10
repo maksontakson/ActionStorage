@@ -1,7 +1,6 @@
 package app.just.actionstorage.service;
 
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,14 +10,12 @@ import app.just.actionstorage.mapper.UserEntityMapper;
 import app.just.actionstorage.repository.UserRepository;
 import app.just.actionstorage.serivce.UserService;
 import app.just.common.dto.UserDto;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,8 +34,11 @@ public class UserServiceTest {
 
   @Test
   void shouldFindAllUsersThenMapThemToDtoAndReturnListOfDto() {
+    //when
     when(userRepository.findAll()).thenReturn(List.of(userEntity));
+    //execute
     List<UserDto> all = userService.findAll();
+    //then
     verify(userRepository, only()).findAll();
     verify(userEntityMapper, atLeastOnce()).toDto(userEntity);
     Assertions.assertEquals(1, all.size());
@@ -46,7 +46,9 @@ public class UserServiceTest {
 
   @Test
   void shouldThrowNullPointerExceptionWhenDbReturnNull() {
+    //when
     when(userRepository.findAll()).thenReturn(null);
+    //thenThrows
     Assertions.assertThrows(NullPointerException.class, () -> userService.findAll());
   }
 }
