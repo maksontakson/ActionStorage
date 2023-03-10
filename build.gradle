@@ -1,0 +1,62 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.4'
+    id 'net.linguica.maven-settings' version '0.5'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'java'
+    id 'jacoco'
+    id 'checkstyle'
+}
+
+group = 'app.just.actionstorage'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'repsy'
+        url 'https://repo.repsy.io/mvn/jjustappuser/default'
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:'
+    implementation 'app.just.common:common-app:1.6-SNAPSHOT'
+    implementation 'org.postgresql:postgresql'
+    implementation 'org.flywaydb:flyway-core'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+subprojects.findAll {
+    checkstyle {
+        sourceSets = [project.sourceSets.main, project.sourceSets.test] as Collection<SourceSet>
+
+        ignoreFailures = false
+        maxWarnings = 0
+        showViolations = true
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}

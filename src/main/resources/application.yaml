@@ -1,0 +1,19 @@
+server:
+  port: 8002
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: "postgres"
+    password: "postgres"
+    url: "jdbc:postgresql://localhost:5432/actions_data"
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    locations: classpath:/db/migration/schema, classpath:/db/migration/data
+
