@@ -1,5 +1,8 @@
 package app.just.actionstorage.service;
 
+import static app.just.actionstorage.common.TestConstants.Model.USER_NAME1;
+import static app.just.actionstorage.common.TestConstants.Model.UserEntityAttributes.DESCRIPTION;
+import static app.just.actionstorage.common.TestConstants.Model.UserEntityAttributes.EMAIL;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
@@ -27,9 +30,9 @@ public class UserServiceTest {
   @Mock
   private UserEntityMapper userEntityMapper;
   private static final UserEntity userEntity = UserEntity.builder()
-      .username("testUsername")
-      .email("test@gmail.com")
-      .description("testDescription")
+      .username(USER_NAME1)
+      .email(EMAIL)
+      .description(DESCRIPTION)
       .build();
 
   @Test
