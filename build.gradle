@@ -31,6 +31,7 @@ dependencies {
     implementation 'app.just.common:common-app:1.6-SNAPSHOT'
     implementation 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'
+    implementation group: 'com.github.database-rider', name: 'rider-spring', version: '1.36.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.mapstruct:mapstruct:1.5.2.Final'

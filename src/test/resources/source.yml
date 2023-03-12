@@ -1,0 +1,3 @@
+source:
+  - type: "EMAIL"
+    active: true
