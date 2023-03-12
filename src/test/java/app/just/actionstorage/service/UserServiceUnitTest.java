@@ -23,27 +23,27 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceUnitTest {
+  private static final UserEntity USER_ENTITY = UserEntity.builder()
+      .username(USER_NAME1)
+      .email(EMAIL)
+      .description(DESCRIPTION)
+      .build();
   @InjectMocks
   private UserService userService;
   @Mock
   private UserRepository userRepository;
   @Mock
   private UserEntityMapper userEntityMapper;
-  private static final UserEntity userEntity = UserEntity.builder()
-      .username(USER_NAME1)
-      .email(EMAIL)
-      .description(DESCRIPTION)
-      .build();
 
   @Test
   void shouldFindAllUsersThenMapThemToDtoAndReturnListOfDto() {
     //when
-    when(userRepository.findAll()).thenReturn(List.of(userEntity));
+    when(userRepository.findAll()).thenReturn(List.of(USER_ENTITY));
     //execute
     List<UserDto> all = userService.findAll();
     //then
     verify(userRepository, only()).findAll();
-    verify(userEntityMapper, atLeastOnce()).toDto(userEntity);
+    verify(userEntityMapper, atLeastOnce()).toDto(USER_ENTITY);
     Assertions.assertEquals(1, all.size());
   }
 

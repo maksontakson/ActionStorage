@@ -12,9 +12,18 @@ public final class TestConstants {
   private TestConstants() {
   }
 
+  public static final class Path {
+
+    public static final String ACTION_CONTROLLER_POST = "/actions/save";
+    public static final String USER_CONTROLLER_POST = "/users";
+
+    private Path() {
+    }
+  }
+
   public static final class Model {
-    public static final String USER_NAME1 = "testUsername1";
-    public static final String USER_NAME2 = "testUsername2";
+    public static final String USER_NAME1 = "test_user_first";
+    public static final String USER_NAME2 = "test_second_user";
     public static final ActionType VALID_ACTION_TYPE_FINISH_TRANSACTION =
         ActionType.FINISH_TRANSACTION;
     public static final ActionType VALID_ACTION_TYPE_START_TRANSACTION =
@@ -27,17 +36,14 @@ public final class TestConstants {
 
     public static final class UserEntityAttributes {
 
-      private UserEntityAttributes() {
-      }
-
       public static final String EMAIL = "test@gmail.com";
       public static final String DESCRIPTION = "testDescription";
+
+      private UserEntityAttributes() {
+      }
     }
 
     public static final class CreateNewActionRequestDtoAttributes {
-
-      private CreateNewActionRequestDtoAttributes() {
-      }
 
       public static final SourceDto ACTIVE_EMAIL_SOURCE_DTO = SourceDto.builder()
           .type(SourceType.EMAIL)
@@ -47,12 +53,12 @@ public final class TestConstants {
           .type(SourceType.PHONE)
           .active(true)
           .build();
+
+      private CreateNewActionRequestDtoAttributes() {
+      }
     }
 
     public static final class ActionEntityAttributes {
-
-      private ActionEntityAttributes() {
-      }
 
       public static final String ID = UUID.randomUUID().toString();
       public static final SourceEntity ACTIVE_EMAIL_SOURCE_ENTITY = SourceEntity.builder()
@@ -63,6 +69,9 @@ public final class TestConstants {
           .type(SourceType.PHONE)
           .active(true)
           .build();
+
+      private ActionEntityAttributes() {
+      }
     }
   }
 }

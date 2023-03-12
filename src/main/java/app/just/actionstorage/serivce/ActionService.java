@@ -50,7 +50,6 @@ public class ActionService {
         return savedActions.stream()
                 .map(actionEntityMapper::toDto)
                 .collect(Collectors.toList());
-
     }
 
     private boolean isValidActionList(List<ActionEntity> actions) {

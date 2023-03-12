@@ -36,6 +36,49 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class ActionServiceUnitTest {
+  private static final CreateNewActionRequestDto ACTION_REQUEST_VALID_DTO_1 =
+      CreateNewActionRequestDto.builder()
+          .username(USER_NAME1)
+          .date(DATE)
+          .type(VALID_ACTION_TYPE_FINISH_TRANSACTION)
+          .source(ACTIVE_EMAIL_SOURCE_DTO)
+          .build();
+  private static final CreateNewActionRequestDto ACTION_REQUEST_INVALID_DTO =
+      CreateNewActionRequestDto.builder()
+          .username(USER_NAME2)
+          .date(DATE)
+          .type(INVALID_ACTION_TYPE)
+          .source(ACTIVE_PHONE_SOURCE_DTO)
+          .build();
+  private static final CreateNewActionRequestDto ACTION_REQUEST_VALID_DTO_2 =
+      CreateNewActionRequestDto.builder()
+          .username(USER_NAME1)
+          .date(DATE)
+          .type(VALID_ACTION_TYPE_START_TRANSACTION)
+          .source(ACTIVE_PHONE_SOURCE_DTO)
+          .build();
+
+  private static final ActionEntity VALID_ACTION_ENTITY_1 = ActionEntity.builder()
+      .id(ID)
+      .username(USER_NAME1)
+      .date(DATE)
+      .type(VALID_ACTION_TYPE_FINISH_TRANSACTION)
+      .source(ACTIVE_EMAIL_SOURCE_ENTITY)
+      .build();
+  private static final ActionEntity VALID_ACTION_ENTITY_2 = ActionEntity.builder()
+      .id(ID)
+      .username(USER_NAME1)
+      .date(DATE)
+      .type(VALID_ACTION_TYPE_START_TRANSACTION)
+      .source(ACTIVE_PHONE_SOURCE_ENTITY)
+      .build();
+  private static final ActionEntity INVALID_ACTION_ENTITY_2 = ActionEntity.builder()
+      .id(ID)
+      .username(USER_NAME2)
+      .date(DATE)
+      .type(INVALID_ACTION_TYPE)
+      .source(ACTIVE_PHONE_SOURCE_ENTITY)
+      .build();
   @InjectMocks
   private ActionService actionService;
   @Mock
@@ -44,60 +87,20 @@ public class ActionServiceUnitTest {
   private ActionRepository actionRepository;
   @Mock
   private SourceRepository sourceRepository;
-  private static final CreateNewActionRequestDto actionRequestValidDto1 =
-      CreateNewActionRequestDto.builder()
-          .username(USER_NAME1)
-          .date(DATE)
-          .type(VALID_ACTION_TYPE_FINISH_TRANSACTION)
-          .source(ACTIVE_EMAIL_SOURCE_DTO)
-          .build();
-  private static final CreateNewActionRequestDto actionRequestValidDto2 =
-      CreateNewActionRequestDto.builder()
-          .username(USER_NAME1)
-          .date(DATE)
-          .type(VALID_ACTION_TYPE_START_TRANSACTION)
-          .source(ACTIVE_PHONE_SOURCE_DTO)
-          .build();
-  private static final CreateNewActionRequestDto actionRequestInvalidDto =
-      CreateNewActionRequestDto.builder()
-          .username(USER_NAME2)
-          .date(DATE)
-          .type(INVALID_ACTION_TYPE)
-          .source(ACTIVE_PHONE_SOURCE_DTO)
-          .build();
-
-  private static final ActionEntity validActionEntity1 = ActionEntity.builder()
-      .id(ID)
-      .username(USER_NAME1)
-      .date(DATE)
-      .type(VALID_ACTION_TYPE_FINISH_TRANSACTION)
-      .source(ACTIVE_EMAIL_SOURCE_ENTITY)
-      .build();
-  private static final ActionEntity validActionEntity2 = ActionEntity.builder()
-      .id(ID)
-      .username(USER_NAME1)
-      .date(DATE)
-      .type(VALID_ACTION_TYPE_START_TRANSACTION)
-      .source(ACTIVE_PHONE_SOURCE_ENTITY)
-      .build();
-  private static final ActionEntity invalidActionEntity2 = ActionEntity.builder()
-      .id(ID)
-      .username(USER_NAME2)
-      .date(DATE)
-      .type(INVALID_ACTION_TYPE)
-      .source(ACTIVE_PHONE_SOURCE_ENTITY)
-      .build();
 
   @Test
   void shouldReturnActionDtoListWhenActionRequestDtoListHasElementsWithTheSameUsernameAndValidTypesOf() {
     //when
-    when(actionEntityMapper.toNewEntity(actionRequestValidDto1)).thenReturn(validActionEntity1);
-    when(actionEntityMapper.toNewEntity(actionRequestValidDto2)).thenReturn(validActionEntity2);
+    when(actionEntityMapper.toNewEntity(ACTION_REQUEST_VALID_DTO_1)).thenReturn(
+        VALID_ACTION_ENTITY_1);
+    when(actionEntityMapper.toNewEntity(ACTION_REQUEST_VALID_DTO_2)).thenReturn(
+        VALID_ACTION_ENTITY_2);
     when(actionRepository.saveAll(any())).thenReturn(
-        List.of(validActionEntity1, validActionEntity2));
+        List.of(VALID_ACTION_ENTITY_1, VALID_ACTION_ENTITY_2));
     //execute
     List<ActionDto> actionDtoList =
-        actionService.proceedNewActions(List.of(actionRequestValidDto1, actionRequestValidDto2));
+        actionService.proceedNewActions(List.of(ACTION_REQUEST_VALID_DTO_1,
+            ACTION_REQUEST_VALID_DTO_2));
     //then
     Mockito.verify(actionEntityMapper, Mockito.times(2)).toNewEntity(any());
     verify(sourceRepository, only()).saveAll(any());
@@ -109,11 +112,13 @@ public class ActionServiceUnitTest {
   @Test
   void shouldReturnEmptyActionDtoListWhenRequestDtoListHasElementsWithDifferentUsernameAndInvalidTypeOfAction() {
     //when
-    when(actionEntityMapper.toNewEntity(actionRequestValidDto1)).thenReturn(validActionEntity1);
-    when(actionEntityMapper.toNewEntity(actionRequestInvalidDto)).thenReturn(invalidActionEntity2);
+    when(actionEntityMapper.toNewEntity(ACTION_REQUEST_VALID_DTO_1)).thenReturn(
+        VALID_ACTION_ENTITY_1);
+    when(actionEntityMapper.toNewEntity(ACTION_REQUEST_INVALID_DTO)).thenReturn(
+        INVALID_ACTION_ENTITY_2);
     //execute
     List<ActionDto> actionDtoList =
-        actionService.proceedNewActions(List.of(actionRequestValidDto1, actionRequestInvalidDto));
+        actionService.proceedNewActions(List.of(ACTION_REQUEST_VALID_DTO_1, ACTION_REQUEST_INVALID_DTO));
     //then
     Mockito.verify(actionEntityMapper, Mockito.times(2)).toNewEntity(any());
     verify(sourceRepository, never()).saveAll(any());
@@ -125,10 +130,11 @@ public class ActionServiceUnitTest {
   @Test
   void shouldReturnEmptyActionDtoListWhenActionRequestDtoListHasOneElement() {
     //when
-    when(actionEntityMapper.toNewEntity(actionRequestValidDto1)).thenReturn(validActionEntity1);
+    when(actionEntityMapper.toNewEntity(ACTION_REQUEST_VALID_DTO_1)).thenReturn(
+        VALID_ACTION_ENTITY_1);
     //execute
     List<ActionDto> actionDtoList =
-        actionService.proceedNewActions(List.of(actionRequestValidDto1));
+        actionService.proceedNewActions(List.of(ACTION_REQUEST_VALID_DTO_1));
     //then
     Mockito.verify(actionEntityMapper, Mockito.times(1)).toNewEntity(any());
     verify(sourceRepository, never()).saveAll(any());
